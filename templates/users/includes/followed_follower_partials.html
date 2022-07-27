@@ -1,0 +1,11 @@
+<hr>
+<div class="row">
+    <div class="col-lg-10">
+        <p class="font-weight-bold" style="text-align: center;color: black;font-family: 'Roboto', sans-serif;">Takipçilərim</p>
+        <p class="font-weight-bold" style="text-align: center;color: black;font-family: 'Roboto', sans-serif;">Takip etdiklərim</p>
+    </div>
+    <div class="col-lg-2">
+        <p class="lead" id="id_followed" data-url="{% url 'user_followers' user.username %}" style="text-align: center;color: black;font-size: 1.25rem;">{{user.followed.count}}</p>
+        <p class="lead" id="id_follower" data-url="{% url 'user_followeds' user.username %}" style="text-align: center;color: black;font-size: 1.25rem;">{{user.follower.count}}</p>
+    </div>
+</div>

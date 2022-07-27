@@ -1,0 +1,115 @@
+<div class="col-md-4 mb-3">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex flex-column align-items-center text-center">
+          <img src="{{user.userprofile.photo.url}}" class="rounded-resonsive" width="250">
+
+          
+          <div class="mt-1">
+
+            <!-- Upload Profile photo -->
+            <button type="button" class="btn btn-outline-info js-upload-photos mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-card-image" viewBox="0 0 16 16">
+                <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
+                <path
+                  d="M1.5 2A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13zm13 1a.5.5 0 0 1 .5.5v6l-3.775-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12v.54A.505.505 0 0 1 1 12.5v-9a.5.5 0 0 1 .5-.5h13z" />
+              </svg> Şəkil yüklə
+            </button>
+
+            <input id="fileupload" type="file" name="photo" style="display: none;"
+              data-url="{% url 'profile_photo_edit' %}" data-form-data='{"csrfmiddlewaretoken": "{{ csrf_token }}"}'>
+
+            <!-- Upload Profile photo End-->
+            <br>
+            <br>
+            <h4>{{user.username}}</h4>
+            {% include "users/includes/followed_follower_partials.html" %}
+            <br>
+            <p style="color: #534848;"><b>Xəbər sayı: <span>{{posts_count}}</b></span></p>
+            <form action="{% url 'user_visible' %}" id="visible_id" method="POST">
+              {% csrf_token %}
+            <div class="md-5">
+              <div class="row">
+                <p class="mr-1">{{visible_form}}</p>
+                <button class="btn btn-outline-dark  h-25">Dəyiş</button>
+              </div>
+            </div>
+          </form>
+          
+           
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  <!-- --------- -->
+
+
+  <!-- Profile about -->
+  <div id="about" class="col-md-8">
+    <div class="card mb-3">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-sm-3">
+            <h6 class="mb-0">Tam Adı</h6>
+          </div>
+          <div class="col-sm-9 text-secondary">
+            {{user.get_full_name}}
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-sm-3">
+            <h6 class="mb-0">Email</h6>
+          </div>
+          <div class="col-sm-9 text-secondary">
+            {{user.email}}
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-sm-3">
+            <h6 class="mb-0">Telefon</h6>
+          </div>
+          <div class="col-sm-9 text-secondary">
+            {{user.userprofile.telefon}}
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-sm-3">
+            <h6 class="mb-0">Doğum tarixi</h6>
+          </div>
+          <div class="col-sm-9 text-secondary">
+            {{user.userprofile.brithday}}
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-sm-3">
+            <h6 class="mb-0">Cinsiyyət</h6>
+          </div>
+          <div class="col-sm-9 text-secondary">
+            {{user.userprofile.cinsiyyet}}
+          </div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-sm-3">
+            <h6 class="mb-0">Hakkında</h6>
+          </div>
+          <div class="col-sm-9 text-secondary">
+            {{user.userprofile.bio}}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  
+
+  <!-- Profile Posts -->

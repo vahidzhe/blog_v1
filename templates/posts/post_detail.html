@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<style>
+    .date {
+        font-size: 13px
+    }
+
+    .comment-text {
+        font-size: 16px
+    }
+
+    .fs-12 {
+        font-size: 13px
+    }
+
+    .shadow-none {
+        box-shadow: none
+    }
+
+    .name {
+        color: #007bff
+    }
+
+    .cursor:hover {
+        color: white
+    }
+
+    .cursor {
+        cursor: pointer
+    }
+
+    .textarea {
+        resize: none
+    }
+
+    .fa-facebook {
+        color: #3b5999
+    }
+
+    .fa-twitter {
+        color: #55acee
+    }
+
+    .fa-linkedin {
+        color: #0077B5
+    }
+
+    .fa-instagram {
+        color: #e4405f
+    }
+
+    .fa-dribbble {
+        color: #ea4c89
+    }
+
+    .fa-pinterest {
+        color: #bd081c
+    }
+
+    .fa {
+        cursor: pointer
+    }
+</style>
+<div class="row">
+
+    <!-- Post Content Column -->
+    <div class="col-lg-8">
+
+        <!-- Title -->
+        <h1 class="mt-4">{{post.title}}</h1>
+
+
+        <hr>
+
+        <!-- Date/Time -->
+        <p>{{post.created_date}}</p>
+        <p> <span><i class="fa fa-user" aria-hidden="true"></i><a href="{% url 'dashboard' post.user %}">{{post.user.username}}</a></span></p>
+
+        <hr>
+
+        <!-- Preview Image -->
+        <img class="img-fluid rounded" src="{{post.image.url}}" alt="">
+
+        <hr>
+
+        <!-- Post Content -->
+        <p class="lead">{{post.content|safe}}</p>
+        {% if request.user == post.user %}
+        <div class=" mr-5" role="group" aria-label="Basic example">
+            <a class="btn btn-primary" href="{% url 'update' post.slug %}">Redaktə et</a>
+            <a class="btn btn-danger" href="{% url 'delete' post.slug %}">Sil</a>
+        </div>
+        {% endif %}
+
+        <hr>
+
+        <div class="card my-4">
+            <h5 class="card-header">Şərh yaz:</h5>
+            <div class="card-body">
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{form.as_p}}
+                    </div>
+                    <button type="submit" class="btn btn-primary">Göndər</button>
+                </form>
+            </div>
+        </div>
+
+
+
+
+
+        {% for comment in post.comment.all %}
+        <div class="card my-4">
+            <div class="container mt-5">
+                <div class="d-flex justify-content-center row">
+                    <div class="col-md-12">
+                        <div class="d-flex flex-column comment-section" id="mygroup">
+                            <div class="bg-white p-2">
+                                <div class="d-flex flex-row user-info"><img class="rounded-circle"
+                                        src="{{comment.user.userprofile.photo.url}}" width="70" height="70">
+                                    <div class="d-flex flex-column justify-content-start ml-2"><span
+                                            class="d-block font-weight-bold name"><a href="{% url 'dashboard' post.user %}">{{comment.user.username}}</a></span><span
+                                            class="date text-black-50">{{comment.created_date}}</span></div>
+                                </div>
+                                <div class="mt-2">
+                                    <p class="comment-text">{{comment.content}}</p>
+                                </div>
+                            </div>
+                            <div class="bg-white p-2">
+                                <div class="d-flex flex-row fs-12">
+                                    <div class="like p-2 cursor action-collapse btn btn-outline-dark"
+                                        data-toggle="collapse" data-target="#d{{comment.id}}" aria-expanded="false"
+                                        aria-controls="d{{comment.id}}"><svg xmlns="http://www.w3.org/2000/svg"
+                                            width="16" height="16" fill="currentColor" class="bi bi-reply"
+                                            viewBox="0 0 16 16">
+                                            <path
+                                                d="M6.598 5.013a.144.144 0 0 1 .202.134V6.3a.5.5 0 0 0 .5.5c.667 0 2.013.005 3.3.822.984.624 1.99 1.76 2.595 3.876-1.02-.983-2.185-1.516-3.205-1.799a8.74 8.74 0 0 0-1.921-.306 7.404 7.404 0 0 0-.798.008h-.013l-.005.001h-.001L7.3 9.9l-.05-.498a.5.5 0 0 0-.45.498v1.153c0 .108-.11.176-.202.134L2.614 8.254a.503.503 0 0 0-.042-.028.147.147 0 0 1 0-.252.499.499 0 0 0 .042-.028l3.984-2.933zM7.8 10.386c.068 0 .143.003.223.006.434.02 1.034.086 1.7.271 1.326.368 2.896 1.202 3.94 3.08a.5.5 0 0 0 .933-.305c-.464-3.71-1.886-5.662-3.46-6.66-1.245-.79-2.527-.942-3.336-.971v-.66a1.144 1.144 0 0 0-1.767-.96l-3.994 2.94a1.147 1.147 0 0 0 0 1.946l3.994 2.94a1.144 1.144 0 0 0 1.767-.96v-.667z" />
+                                        </svg><span> Cavabla</span></div>
+
+                                    {% if comment.child_comment.all|length %}
+
+
+
+                                    <div id='mygroup2' class="like p-2 cursor action-collapse btn btn-outline-dark ml-2"
+                                        data-toggle="collapse" data-target="#m{{comment.id}}" aria-expanded="false"
+                                        aria-controls="m{{comment.id}}"><svg xmlns="http://www.w3.org/2000/svg"
+                                            width="16" height="16" fill="currentColor" class="bi bi-view-list"
+                                            viewBox="0 0 16 16">
+                                            <path
+                                                d="M3 4.5h10a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1H3zM1 2a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 2zm0 12a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 14z" />
+                                        </svg><span> Göstər({{comment.child_comment.all.count}})</span></div>
+
+                                    {% endif %}
+
+                                </div>
+                            </div>
+
+                            <div id="d{{comment.id}}" class="bg-light p-2 collapse" data-parent="#mygroup">
+                                <div class="d-flex flex-row align-items-sm-end">
+                                    <img class="rounded-circle" src="{{request.user.userprofile.photo.url}}" width="50"
+                                        height="50">
+                                    <form action="{% url 'add_child_comment' comment.id %}" method="post">
+                                        {% csrf_token %}
+                                        <textarea cols="66" class="form-control ml-2 shadow-none textarea"
+                                            name="child-text"> </textarea>
+                                    
+                                </div>
+                                <div class="mt-2 text-right">
+                                    <button class="btn btn-primary btn-sm shadow-none" type="submit">Yaz</button>
+                                </form>
+                                    <button class="btn btn-outline-primary btn-sm ml-1 shadow-none"
+                                        data-toggle="collapse" href="#d{{comment.id}}" role="button"
+                                        type="button">Bağla</button></div>
+                            </div>
+
+                        </div>
+
+
+                        {% for child_comment in comment.child_comment.all %}
+                        <div id="m{{comment.id}}" class=" p-2 collapse" data-parent="#mygroup2">
+
+                            <div class="row justify-content-md-center">
+                                <div class="col-lg-10 bg-light p-3  ">
+
+                                    <div class="d-flex flex-row user-info"><img class="rounded-circle"
+                                            src="{{child_comment.user.userprofile.photo.url}}" width="70" height="70">
+                                        <div class="d-flex flex-column justify-content-start ml-2"><span
+                                                class="d-block font-weight-bold name"><a href="{% url 'dashboard' post.user %}">{{child_comment.user.username}}</a></span><span
+                                                class="date text-black-50">{{child_comment.created_date}}</span></div>
+
+                                    </div>
+                                    <br>
+                                    <div class="col-lg-9">
+                                        {{child_comment.content}}
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div style="background-color: white;height: 1px;"></div>
+
+                        </div>
+                        {% endfor %}
+
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        {% endfor %}
+
+
+
+
+
+
+    </div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+</div>
+
+</div>
+<!-- /.row -->
+
+{% endblock %}

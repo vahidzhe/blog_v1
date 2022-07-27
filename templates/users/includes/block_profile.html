@@ -1,0 +1,36 @@
+<div class="col-md-4 mb-3">
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex flex-column align-items-center text-center">
+                <img src="{{user.userprofile.photo.url}}" class="rounded-resonsive" width="250">
+
+
+                <div class="mt-1">
+
+
+
+                    <h3>{{user.username}}</h3>
+
+                    {% include "users/includes/followed_follower_partials.html" %}
+                    <p style="color: #534848;"><b>Xəbər sayı: <span>{{posts_count}}</b></span></p>
+                  
+                    <form id = 'follow_control' action="{% url 'add_or_delete_follow_view' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="followed" value="{{user.username}}">
+                        <input type="hidden" name="follower" value="{{request.user.username}}">
+                        <input type="submit" class="btn btn-outline-dark" value="{% if follow_status %}Takib burax{% else %}Takib et{% endif %}">
+                      </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="posts"  class="col-md-8">
+    <div class="mb-3">
+      <div class="body">
+        <h1>Profil bagli</h1>
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,295 @@
+{% extends "base.html" %}
+{% load static %}
+<style>
+  body {
+
+    color: #1a202c;
+    text-align: left;
+    background-color: #DDD2D2;
+  }
+
+  .main-body {
+    padding: 15px;
+  }
+
+  .card {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .1), 0 1px 2px 0 rgba(0, 0, 0, .06);
+  }
+
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 0 solid rgba(0, 0, 0, .125);
+    border-radius: .25rem;
+  }
+
+  .card-body {
+    flex: 1 1 auto;
+    min-height: 1px;
+    padding: 1rem;
+  }
+
+  .gutters-sm {
+    margin-right: -8px;
+    margin-left: -8px;
+  }
+
+  .gutters-sm>.col,
+  .gutters-sm>[class*=col-] {
+    padding-right: 8px;
+    padding-left: 8px;
+  }
+
+  .mb-3,
+  .my-3 {
+    margin-bottom: 1rem !important;
+  }
+
+  .bg-gray-300 {
+    background-color: #e2e8f0;
+  }
+
+  .h-100 {
+    height: 100% !important;
+  }
+
+  .shadow-none {
+    box-shadow: none !important;
+  }
+</style>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+  integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+  integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+  integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+  integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+
+
+
+
+{% block js_upload_profile_photo %}
+
+<script src="{% static 'file_upload_js/vendor/jquery.ui.widget.js' %}"></script>
+<script src="{% static 'file_upload_js/jquery.iframe-transport.js' %}"></script>
+<script src="{% static 'file_upload_js/jquery.fileupload.js' %}"></script>
+
+
+<script src="{% static 'file_upload_js/basic_uploads.js' %}"></script>
+{% endblock %}
+
+
+{% block content %}
+<script>
+  $(document).ready(function () {
+    $('#visible_id').submit(function (e) {
+
+      e.preventDefault();
+      var $this = $(this)
+      var action_url = $this.attr('action')
+      $.ajax({
+        url: action_url,
+        type: 'json',
+
+        data: $this.serialize(),
+        method: 'POST',
+        success: function (data) {
+          console.log(data)
+        }
+      });
+    })
+
+
+
+    $('#follow_control').submit(function (e) {
+      e.preventDefault();
+      var this_form = $(this)
+      var action_url = this_form.attr('action')
+      $.ajax({
+        url: action_url,
+        type: 'json',
+
+        data: this_form.serialize(),
+        method: 'POST',
+        success: function (data) {
+          this_form.children('input[type=submit]').val(data.msg)
+          $('#id_followed').text(data.count)
+
+        }
+      });
+    })
+
+
+    $('#id_followed').click(function (e) {
+      e.preventDefault();
+      var this_form = $(this)
+      var action_url = this_form.attr('data-url')
+      $.ajax({
+        url: action_url,
+        type: 'json',
+
+        data: this_form.serialize(),
+        method: 'GET',
+        beforeSend: function () {
+          $('#followers-modal').modal('show')
+        },
+        success: function (data) {
+          if (data.is_valid) {
+            $('#followers-modal .modal-content').html(data.html_followers_list)
+          }
+
+        }
+      });
+    })
+
+    $('#id_follower').click(function (e) {
+      e.preventDefault();
+      var this_form = $(this)
+      var action_url = this_form.attr('data-url')
+      $.ajax({
+        url: action_url,
+        type: 'json',
+
+        data: this_form.serialize(),
+        method: 'GET',
+        beforeSend: function () {
+          $('#followers-modal').modal('show')
+        },
+        success: function (data) {
+          if (data.is_valid) {
+            $('#followers-modal .modal-content').html(data.html_followeds_list)
+          }
+
+        }
+      });
+    })
+
+    $('#followers-modal').on('click', '.form-inline', function (e) {
+      e.preventDefault()
+      var form = $(this)
+      var form_url = form.attr('action')
+      $.ajax({
+        method: "POST",
+        url: form_url,
+        data: form.serialize(),
+        dataType: "json",
+        success: function (data) {
+          form.find('input[type=submit]').val(data.msg)
+          $('#id_follower').text(data.count)
+          console.log(data.count)
+
+        }
+      });
+    })
+
+
+
+  })
+</script>
+
+<div class="modal fade bd-example-modal-md" id="followers-modal" tabindex="-1" role="dialog"
+  aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade bd-example-modal-lg" id="exampleModal" tabindex="-1" role="dialog"
+  aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+
+
+      <div class="card mb-3">
+        <div class="card-body">
+          <div class="row row-cols-1 row-cols-md-3">
+            {% for post in posts %}
+
+
+            <div class="col mb-4">
+              <div class="card">
+                <img src="{{post.image.url}}" class="card-img-top" width="305" height="203" alt="...">
+                <div class="card-body">
+                  <a href="{% url 'detail' post.slug %}">
+                    <h5 class="card-title">{{post.title}}</h5>
+                  </a>
+                  <p class="card-text"> {{post.content|truncatechars:30|safe}}</p>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+
+          </div>
+        </div>
+      </div>
+
+
+
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Breadcrumb -->
+{% if request.user == user %}
+<nav aria-label="breadcrumb" class="main-breadcrumb mb-2">
+
+  <a href="{% url 'profile_edit' %}" class="btn btn-outline-secondary">Məlumatlarını yenilə</a>
+  <a href="{% url 'password_edit' %}" class="btn btn-outline-secondary">Şifrə dəyiş</a>
+  <button type="button" class="btn btn-outline-primary" data-toggle="modal"
+    data-target="#exampleModal">Məqalələr</button>
+</nav>
+
+<div class="row gutters-sm">
+  {% include 'users/includes/owner_profile.html' %}
+
+</div>
+{% else %}
+
+
+{% if follow_status %}
+<div class="row gutters-sm">
+  {% include 'users/includes/other_profile.html' %}
+</div>
+{% else %}
+
+
+{% if visible %}
+<div class="row gutters-sm">
+  {% include 'users/includes/other_profile.html' %}
+</div>
+
+{% else %}
+<div class="row gutters-sm">
+  {% include 'users/includes/block_profile.html' %}
+</div>
+{% endif %}
+{% endif %}
+
+
+{% endif %}
+
+<!-- Takipdə olmayan -->
+<!-- 
+  
+-->
+
+
+
+
+
+
+
+
+{% endblock %}

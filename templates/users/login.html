@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<form method="post">
+{{form.as_p}}
+{% csrf_token %}
+<input type="hidden" name="next_t" value="{{next}}" id="">
+<button type="submit" class="btn btn-dark" >Daxil ol</button>
+</form>
+{% endblock %}

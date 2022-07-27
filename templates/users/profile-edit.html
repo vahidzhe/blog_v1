@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+
+
+
+{% block content %}
+{% load bootstrap4 %}
+<!-- {% bootstrap_css %} -->
+<!-- {% bootstrap_javascript jquery='full' %} -->
+
+<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.js"></script> -->
+<form action="" method="post">
+    {{ form.media }}
+    {{form.as_p}}
+    {% csrf_token %}
+    <button type="submit" class="btn btn-dark">Yenilə</button>
+</form>
+{% endblock %}
